@@ -1,75 +1,72 @@
-# React + TypeScript + Vite
+# GREEN-API Telegram Chat
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Веб-чат для отправки и получения сообщений в Telegram через
+[GREEN-API](https://green-api.com/). Реализован на React + TypeScript + Vite.
 
-Currently, two official plugins are available:
+## Стек
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React 18
+- TypeScript 5.5 (strict)
+- Vite 5
+- GREEN-API (HTTP API, polling)
 
-## React Compiler
+## Возможности
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Авторизация по `idInstance` и `apiTokenInstance`
+- Создание чата по номеру телефона
+- Отправка текстовых сообщений (метод `SendMessage`)
+- Получение входящих сообщений (метод `ReceiveNotification`, polling)
+- Оптимистичный UI с пометкой неотправленных сообщений
+- Адаптивный трёхколоночный макет
 
-## Expanding the ESLint configuration
+## Требования
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Node.js 18+
+- npm 9+
+- Авторизованный инстанс GREEN-API
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Локальный запуск
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+```bash
+# 1. Клонировать репозиторий
+git clone https://github.com/Vladon305/green-api-telegram-chat
+cd green-api-telegram-chat
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# 2. Установить зависимости
+npm install
 
+# 3. Запустить dev-сервер
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+Откройте http://localhost:5173
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Проверка типов и сборка
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm run typecheck   # tsc --noEmit
+npm run build       # tsc && vite build
+npm run preview     # preview production build
 ```
+
+## Настройка инстанса GREEN-API
+
+В личном кабинете GREEN-API убедитесь, что:
+
+- инстанс авторизован (статус **authorized**);
+
+## Использование
+
+1. Введите `idInstance` и `apiTokenInstance` из личного кабинета GREEN-API.
+2. Нажмите **Войти**.
+3. В левой панели введите номер телефона получателя в формате
+   `79876543210` (без `+`, с кодом страны) и нажмите **+**.
+4. Напишите сообщение и нажмите **Enter** или **Отправить**.
+5. Ответ получателя появится в чате автоматически (polling каждые 5 секунд).
+
+## Архитектура
+
+- `src/api/greenApi.ts` — все запросы к GREEN-API
+- `src/hooks/usePolling.ts` — polling уведомлений
+- `src/components/` — UI-компоненты
+- `src/types/` — доменные типы
